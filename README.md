@@ -1,6 +1,24 @@
-# ICGNN[ICML 2026]
+<div align="center">
+  <h1>CoCo: Compactness and Consistency for Deep Graph Clustering</h1>
+  <p align="center">
+    <strong>A Deep Graph Clustering Framework.</strong>
+  </p>
+  <p align="center" style="font-size: 0; line-height: 0;">
+    </a><a href="https://github.com/wayc04/ICGNN" style="text-decoration: none; display: inline-block; margin: 0 2px;">
+      <img alt="GitHub Code" src="https://img.shields.io/badge/GitHub-ICGNN-black?logo=github" style="vertical-align: middle;" />
+    </a><a href="https://icml.cc/Conferences/2026" style="text-decoration: none; display: inline-block; margin: 0 2px;">
+      <img alt="ICLR 2026" src="https://img.shields.io/badge/ICML%202026-Poster-2ea44f?style=flat&logo=iclr" style="vertical-align: middle;" />
+    </a>
+  </p>
+</div>
 
-This is our PyTorch implementation for the paper, "Learning Robust Graph Neural Networks against Noisy Labels via Influence Contradiction".
+This is the pytorch implementation for our ICML 2026 :
+> Wei Ju, Wei Zhang, Siyu Yi, Zhengyang Mao, Yifan Wang, Jingyang Yuan, Zhiping Xiao, Ziyue Qiao, Ming Zhang. 
+> Identifying and Correcting Label Noise for Robust GNNsvia Influence Contradiction. ICML 2026 
+
+# ICGNN
+
+This is our PyTorch implementation for the paper, "Identifying and Correcting Label Noise for Robust GNNs via Influence Contradiction".
 
 ## Dependencies
 
