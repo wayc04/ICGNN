@@ -1,4 +1,4 @@
-# ICGNN
+# ICGNN[ICML 2026]
 
 This is our PyTorch implementation for the paper, "Learning Robust Graph Neural Networks against Noisy Labels via Influence Contradiction".
 
