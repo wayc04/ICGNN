@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>CoCo: Compactness and Consistency for Deep Graph Clustering</h1>
+  <h1>Identifying and Correcting Label Noise for Robust GNNsvia Influence Contradiction</h1>
   <p align="center">
     <strong>A Deep Graph Clustering Framework.</strong>
   </p>
