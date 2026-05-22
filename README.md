@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>Identifying and Correcting Label Noise for Robust GNNsvia Influence Contradiction</h1>
+  <h1>Identifying and Correcting Label Noise for Robust GNNs via Influence Contradiction</h1>
   <p align="center">
   </p>
   <p align="center" style="font-size: 0; line-height: 0;">
