@@ -122,10 +122,5 @@ We thank NRGNN for releasing its open-source code, which provided a valuable ref
 If this work is useful for your research, please cite:
 
 ```bibtex
-@inproceedings{ju2026identifying,
-  title     = {Identifying and Correcting Label Noise for Robust GNNs via Influence Contradiction},
-  author    = {Ju, Wei and Zhang, Wei and Yi, Siyu and Mao, Zhengyang and Wang, Yifan and Yuan, Jingyang and Xiao, Zhiping and Qiao, Ziyue and Zhang, Ming},
-  booktitle = {International Conference on Machine Learning},
-  year      = {2026}
-}
+
 ```
