@@ -158,13 +158,6 @@ class ICGNN:
         def CE(logits, targets):
             return - (targets * F.log_softmax(logits, dim = 1)).sum(-1).mean()
 
-        def forward_reg_loss(pred_logits):
-            pred_softmax = F.softmax(pred_logits, dim = 1)
-            ent_loss = - (pred_softmax * F.log_softmax(pred_logits, dim = 1)).sum(dim = 1).mean()
-            prob_mean = pred_softmax.mean(dim = 0)
-            ne_loss = (prob_mean * prob_mean.log()).sum()
-            return ent_loss, ne_loss
-
         cls_loss = (1 - self.estimated_noise_ratio) * CE(logits[self.idx_train], targets_corrected) + \
                    self.estimated_noise_ratio * CE(logits[self.idx_train], targets_onehot_noise[self.idx_train])
 
@@ -178,13 +171,9 @@ class ICGNN:
         elif self.pseudo_type == 'no':
             pseudo_loss = torch.zeros((1,), device = self.device).mean()
 
-        ent_loss, ne_loss = forward_reg_loss(logits)
-
         loss = cls_loss + \
                pseudo_loss * self.args.pseudo_loss_weight + \
-               rec_loss * self.args.rec_loss_weight + \
-               ent_loss * self.args.ent_loss_weight + \
-               ne_loss * self.args.ne_loss_weight
+               rec_loss * self.args.rec_loss_weight
 
         loss.backward()
 

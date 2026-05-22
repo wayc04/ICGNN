@@ -39,8 +39,6 @@ parser.add_argument('--epochs', type = int, default = 200,
                     help = 'Number of epochs to train.')
 parser.add_argument('--lr', type = float, default = 0.001,
                     help = 'Initial learning rate.')
-parser.add_argument('--alpha', type = float, default = 0.03,
-                    help = 'weight of loss of edge predictor')
 parser.add_argument('--t_small', type = float, default = 0.05,
                     help = 'threshold of eliminating the edges')
 parser.add_argument('--p_u', type = float, default = 0.8,
@@ -59,12 +57,6 @@ parser.add_argument('--feat_dim', type = int, default = 32,
                     help = 'feature dimension of projector')
 parser.add_argument('--reassign', type = int, default = 1,
                     help = 'epoch interval of reassign confidence')
-parser.add_argument('--cls_loss_weight', type = float, default = 1.0,
-                    help = 'cls_loss_weight')
-parser.add_argument('--ent_loss_weight', type = float, default = 1.0,
-                    help = 'ent_loss_weight')
-parser.add_argument('--ne_loss_weight', type = float, default = 1.0,
-                    help = 'ne_loss_weight')
 parser.add_argument('--pseudo_loss_weight', type = float, default = 1.0,
                     help = 'pseudo labeling loss weight')
 parser.add_argument('--rec_loss_weight', type = float, default = 0.03,
