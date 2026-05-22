@@ -72,7 +72,8 @@ The training pipeline also uses `deeprobust`, `numpy`, `scipy`, `scikit-learn`, 
 Run ICGNN on Pubmed with uniform label noise:
 
 ```bash
-python train.py --dataset pubmed \
+python train.py \
+--dataset pubmed \
 --ptb_rate 0.2 \
 --noise uniform \
 --label_rate 0.01 \
@@ -87,14 +88,15 @@ Run ICGNN on Amazon Photo with pair noise:
 
 ```bash
 python train.py \
-  --dataset photo \
-  --ptb_rate 0.2 \
-  --noise pair \
-  --label_rate 0.01 \
-  --K 100 \
-  --local_conflict_weight 0.8 \
-  --warmup_epochs 15 \
-  --temp 1.0
+--dataset pubmed \
+--ptb_rate 0.2 \
+--noise pair \
+--label_rate 0.01 \
+--K 75 \
+--local_conflict_weight 0.8 \
+--warmup_epochs 30 \
+--scale1 1.0 \
+--temp 0.5
 ```
 
 More commands are available in [`run.sh`](run.sh).
