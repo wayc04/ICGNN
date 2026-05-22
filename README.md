@@ -13,7 +13,7 @@
   </p>
 </div>
 
-This repository provides the PyTorch implementation for:
+This repository contains the PyTorch implementation of:
 
 > Wei Ju, Wei Zhang, Siyu Yi, Zhengyang Mao, Yifan Wang, Jingyang Yuan, Zhiping Xiao, Ziyue Qiao, and Ming Zhang.<br>
 > **Identifying and Correcting Label Noise for Robust GNNs via Influence Contradiction.**<br>
@@ -21,93 +21,37 @@ This repository provides the PyTorch implementation for:
 
 ## Overview
 
-ICGNN addresses semi-supervised node classification when labeled nodes are both scarce and corrupted by label noise. The paper observes that, under graph homophily and message passing, a labeled node receiving strong influence from nodes annotated as other classes is more likely to have an unreliable label. It therefore introduces the **Influence Contradiction Score (ICS)** as a noise indicator, then uses soft label cleaning and pseudo-labeling to train a robust GNN.
+ICGNN is a robust GNN framework for semi-supervised node classification with noisy and limited labels. It introduces **Influence Contradiction Score (ICS)** to identify unreliable labels, performs soft label cleaning by neighbor aggregation, and uses pseudo-labels from unlabeled nodes as auxiliary supervision.
 
-The method is organized around three components from the paper:
+## Method
 
-1. **Noise detection by influence contradiction.**
-2. **Noise cleaning by neighbor aggregation.**
-3. **Optimization against noisy and limited labels.**
+ICGNN first computes a graph diffusion matrix with Personalized PageRank:
 
-## Paper-Grounded Methodology
+$$
+\mathbf{T} = \epsilon \left(\mathbf{I} - (1-\epsilon)\hat{\mathbf{A}}\right)^{-1}
+$$
 
-### 1. Influence Contradiction Score
+The structure-level ICS measures how strongly a labeled node is influenced by nodes annotated as other classes. To include attribute information, ICGNN also constructs a KNN-based representation affinity graph and computes an attribute-level diffusion matrix $\mathbf{R}$. The final score is:
 
-ICGNN first builds a graph diffusion matrix with Personalized PageRank:
+$$
+\mathrm{ICS}_i = (1-\alpha)\mathrm{ICS}_i(\mathbf{T}) + \alpha\mathrm{ICS}_i(\mathbf{R})
+$$
 
-```text
-T = epsilon * (I - (1 - epsilon) * A_hat)^(-1)
-```
+A two-component Gaussian Mixture Model estimates the clean-label confidence $\hat{\beta}_i$ from ICS values. Then ICGNN softly updates each noisy label by combining the original annotation and neighbor-aggregated prediction:
 
-Each row of `T` describes how a node influences other nodes through the graph. For a labeled node, the structure-level ICS accumulates the influence it receives from labeled nodes assigned to other classes, normalized by class size. A smaller ICS indicates that the node is more consistent with its annotated class, while a larger ICS indicates stronger contradiction and a higher probability of label noise.
+$$
+\mathbf{l}_i^{(t)} = \hat{\beta}_i^{(t)}\mathbf{y}_i + \left(1-\hat{\beta}_i^{(t)}\right)h^{(t)}(\mathbf{z}_i)
+$$
 
-The paper further notes that topology alone may overlook attribute information. ICGNN therefore extracts node representations with a GNN encoder, constructs a KNN-based representation affinity graph, computes an attribute-level diffusion matrix `R`, and derives an attribute-level ICS in the same spirit. The final noise indicator combines both signals:
+The training objective uses cross-entropy on cleaned labels and pseudo-labels:
 
-```text
-ICS_i = (1 - alpha) * ICS_i(T) + alpha * ICS_i(R)
-```
-
-In the paper's experimental setting, `alpha` is set to `0.5`.
-
-### 2. GMM-Based Noise Confidence
-
-After obtaining ICS values, ICGNN fits a two-component Gaussian Mixture Model with the EM algorithm. The posterior probability assigned to the component with the smaller mean is used as the clean-label confidence `beta_i`. This gives a learnable soft threshold for separating likely clean labels from likely noisy labels, avoiding a manually fixed hard threshold.
-
-### 3. Noise Cleaning by Neighbor Aggregation
-
-Instead of forcing noisy labels to a single neighbor-voted class, the paper proposes a conservative soft correction strategy. At training epoch `t`, the updated supervision for a labeled node is a convex combination of its original noisy one-hot label and the prediction aggregated from graph-diffusion neighbors:
-
-```text
-l_i^(t) = beta_i^(t) * y_i + (1 - beta_i^(t)) * h^(t)(z_i)
-```
-
-Here, `h^(t)(z_i)` aggregates neighbors' predictions using weights from the diffusion matrix `T`, followed by softmax normalization. A high `beta_i` keeps more of the original label; a low `beta_i` relies more on neighbor-aggregated prediction.
-
-### 4. Pseudo-Labeling for Unlabeled Nodes
-
-Because the problem setting contains few labeled nodes and many unlabeled nodes, ICGNN also applies the same neighbor-aggregation strategy to unlabeled nodes. These pseudo-labels provide auxiliary supervision and help mitigate label scarcity.
-
-### 5. Training Objective
-
-Following Eq. (8) in the paper, the model is optimized with cross-entropy supervision from two sources:
-
-| Source | Supervision signal |
-| --- | --- |
-| Labeled nodes | Cleaned soft labels from ICS confidence and neighbor aggregation. |
-| Unlabeled nodes | Neighbor-aggregated pseudo-labels. |
-
-The appendix further clarifies that ICS computation, GMM confidence assignment, and label correction are auxiliary operations outside the direct gradient path. They iteratively refine the labels used for training, while gradients flow through the primary GNN model.
-
-## Experimental Protocol in the Paper
-
-The paper evaluates ICGNN on six benchmark datasets:
-
-| Category | Datasets |
-| --- | --- |
-| Author network | Coauthor CS |
-| Co-purchase network | Amazon Photo |
-| Citation networks | Cora, Pubmed, Citeseer, DBLP |
-
-The main experiments use:
-
-| Setting | Value |
-| --- | --- |
-| Test split | 80% of nodes |
-| Validation split | 10% of nodes |
-| Labeled training rate | 1% for Coauthor CS, Amazon Photo, Pubmed, DBLP; 5% for Cora and Citeseer |
-| Noise types | Uniform noise and pair noise |
-| Default noise rate | 20% |
-| Teleport probability | 0.85 |
-| KNN size for representation affinity graph | 5 |
-| ICS trade-off `alpha` | 0.5 |
-| Training epochs | 200 |
-| Evaluation | Mean accuracy and standard deviation over 5 runs |
-
-The paper compares against GCN, Forward, Coteaching+, NRGNN, RTGNN, CGNN, CR-GNN, DND-NET, and ProCon. Its ablation study removes structure-level ICS, attribute-level ICS, noise cleaning, and pseudo-labeling, and also replaces the graph diffusion matrix with the adjacency matrix. The reported results show that both structure-level and attribute-level contradiction are complementary, noise cleaning is important for robustness, pseudo-labeling improves supervision under label scarcity, and graph diffusion is more effective than using only the local adjacency matrix.
+$$
+\mathcal{L}
+= \sum_{i=1}^{L}\mathrm{CE}\left(\mathbf{p}_i^{(t)}, \mathbf{l}_i^{(t)}\right)
++ \sum_{i=L+1}^{N}\mathrm{CE}\left(\mathbf{p}_i^{(t)}, h^{(t)}(\mathbf{z}_i)\right)
+$$
 
 ## Requirements
-
-The code was developed with:
 
 ```text
 python == 3.8
@@ -115,9 +59,9 @@ torch == 1.10.0
 torch-geometric == 2.0.2
 ```
 
-Additional packages used by the training pipeline include `deeprobust`, `numpy`, `scipy`, `scikit-learn`, `networkx`, and `loguru`.
+The training pipeline also uses `deeprobust`, `numpy`, `scipy`, `scikit-learn`, `networkx`, and `loguru`.
 
-## Quick Start
+## Usage
 
 Run ICGNN on Pubmed with uniform label noise:
 
@@ -148,21 +92,23 @@ python train.py \
   --temp 1.0
 ```
 
-More dataset-specific commands are provided in [`run.sh`](run.sh).
+More commands are available in [`run.sh`](run.sh).
 
-## Repository Layout
+## Repository Structure
 
 ```text
 ICGNN/
-|-- data/              # Dataset files and cached graph artifacts
-|-- models/
-|   |-- GCN.py          # Backbone graph convolutional network
-|   `-- ICGNN.py        # ICGNN training pipeline and edge estimator
-|-- dataset.py          # Dataset loading and preprocessing
-|-- train.py            # Main experimental entry point
-|-- utils.py            # Noise generation, ICS utilities, and metrics
-`-- run.sh              # Reproduction commands
+|-- data/          # Dataset files and cached graph artifacts
+|-- models/        # GNN backbone and ICGNN implementation
+|-- dataset.py     # Dataset loading and preprocessing
+|-- train.py       # Main training script
+|-- utils.py       # Noise generation, ICS utilities, and metrics
+`-- run.sh         # Reproduction commands
 ```
+
+## Acknowledgements
+
+We thank NRGNN for releasing its open-source code, which provided a valuable reference for this repository.
 
 ## Citation
 
