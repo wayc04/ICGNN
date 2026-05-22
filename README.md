@@ -23,6 +23,14 @@ This repository contains the PyTorch implementation of:
 
 ICGNN is a robust GNN framework for semi-supervised node classification with noisy and limited labels. It introduces **Influence Contradiction Score (ICS)** to identify unreliable labels, performs soft label cleaning by neighbor aggregation, and uses pseudo-labels from unlabeled nodes as auxiliary supervision.
 
+## Pipeline
+
+<p align="center">
+  <img src="pipeline.png" alt="Overview of the ICGNN pipeline" width="95%" />
+</p>
+
+ICGNN detects noisy labels through structure- and attribute-level influence contradiction, then performs neighbor-aggregation-based label cleaning and pseudo-labeling for robust GNN training.
+
 ## Method
 
 ICGNN first computes a graph diffusion matrix with Personalized PageRank:
