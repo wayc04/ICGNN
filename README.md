@@ -1,7 +1,6 @@
 <div align="center">
   <h1>Identifying and Correcting Label Noise for Robust GNNsvia Influence Contradiction</h1>
   <p align="center">
-    <strong>A Deep Graph Clustering Framework.</strong>
   </p>
   <p align="center" style="font-size: 0; line-height: 0;">
     </a><a href="https://github.com/wayc04/ICGNN" style="text-decoration: none; display: inline-block; margin: 0 2px;">
