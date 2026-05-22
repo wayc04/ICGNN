@@ -11,5 +11,3 @@ python train.py --dataset dblp --ptb_rate 0.2 --noise uniform --label_rate 0.01 
 python train.py --dataset dblp --ptb_rate 0.2 --noise pair --label_rate 0.01 --K 50 --local_conflict_weight 0.9 --warmup_epochs 30 --scale1 1.0 --temp 0.01
 python train.py --dataset cora --ptb_rate 0.2 --noise uniform --label_rate 0.05 --K 50 --local_conflict_weight 0.9 --warmup_epochs 30 --scale1 1.0 --temp 0.01
 python train.py --dataset cora --ptb_rate 0.2 --noise pair --label_rate 0.05 --K 50 --local_conflict_weight 0.9 --warmup_epochs 30 --scale1 1.0 --temp 0.01
-#python train.py --dataset computers -ptb_rate 0.2 --noise uniform --label_rate 0.01 --K 100
-#python train.py --dataset computers --ptb_rate 0.2 --noise pair --label_rate 0.01 --K 100
