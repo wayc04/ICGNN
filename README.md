@@ -46,9 +46,7 @@ $$
 The training objective uses cross-entropy on cleaned labels and pseudo-labels:
 
 $$
-\mathcal{L}
-= \sum_{i=1}^{L}\mathrm{CE}\left(\mathbf{p}_i^{(t)}, \mathbf{l}_i^{(t)}\right)
-+ \sum_{i=L+1}^{N}\mathrm{CE}\left(\mathbf{p}_i^{(t)}, h^{(t)}(\mathbf{z}_i)\right)
+\mathcal{L} = \sum_{i=1}^{L} \mathbf{l}_{i}^{(t)} \log \mathbf{p}_{i}^{(t)} + \sum_{i=L+1}^{N} h^{(t)}(\mathbf{z}_{i}) \log \mathbf{p}_{i}^{(t)}
 $$
 
 ## Requirements
