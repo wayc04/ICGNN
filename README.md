@@ -122,4 +122,19 @@ We thank NRGNN for releasing its open-source code, which provided a valuable ref
 If this work is useful for your research, please cite:
 
 ```bibtex
+@InProceedings{pmlr-v306-ju26c,
+  title = 	 {Identifying and Correcting Label Noise for Robust {GNN}s via Influence Contradiction},
+  author =       {Ju, Wei and Zhang, Wei and Yi, Siyu and Mao, Zhengyang and Wang, Yifan and Yuan, Jingyang and Xiao, Zhiping and Qiao, Ziyue and Zhang, Ming},
+  booktitle = 	 {Proceedings of the 43rd International Conference on Machine Learning},
+  pages = 	 {54828--54846},
+  year = 	 {2026},
+  editor = 	 {Zhang, Tong and Dudik, Miroslav and Jaggi, Martin and Agarwal, Alekh and Li, Sharon and Schuurmans, Dale and Zhu, Jerry and Berkenkamp, Felix and Dong, Hanze and Bietti, Alberto},
+  volume = 	 {306},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {06--11 Jul},
+  publisher =    {PMLR},
+  pdf = 	 {https://raw.githubusercontent.com/mlresearch/v306/main/assets/ju26c/ju26c.pdf},
+  url = 	 {https://proceedings.mlr.press/v306/ju26c.html},
+  abstract = 	 {Graph Neural Networks (GNNs) have shown remarkable capabilities in learning from graph-structured data with various applications such as social analysis and bioinformatics. However, the presence of label noise in real scenarios poses a significant challenge in learning robust GNNs, and their effectiveness can be severely impacted when dealing with noisy labels on graphs, often stemming from annotation errors or inconsistencies. To address this, in this paper we propose a novel approach called ICGNN that harnesses the structure information of the graph to effectively alleviate the challenges posed by noisy labels. Specifically, we first design a novel noise indicator that measures the influence contradiction score (ICS) based on the graph diffusion matrix to quantify the credibility of nodes with clean labels, such that nodes with higher ICS values are more likely to be detected as having noisy labels. Then we leverage the Gaussian mixture model to precisely detect whether the label of a node is noisy or not. Additionally, we develop a soft strategy to combine the predictions from neighboring nodes on the graph to correct the detected noisy labels. At last, pseudo-labeling for abundant unlabeled nodes is incorporated to provide auxiliary supervision signals and guide the model optimization. Experiments on benchmark datasets show the superiority of our approach over competitive baselines in noisy label scenarios. The source code is available at: https://github.com/wayc04/ICGNN.}
+}
 ```
